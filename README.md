@@ -18,3 +18,5 @@ This project utilizes OpenCV to create an application that can detect ArUco mark
 ## Result image
 
 The result image demonstrates the output of the application, showing the detected ArUco markers drawn on the image and the visualization of their orientation using 3D axes.
+
+<img src="https://github.com/AnneLivia/AROpenCV/assets/31932673/206415cd-96f5-4746-8f07-02cafe31eba4" width="50%"/>
