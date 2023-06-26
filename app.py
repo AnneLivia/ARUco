@@ -7,6 +7,7 @@ parse = argparse.ArgumentParser()
 parse.add_argument('-arudict', default='DICT_ARUCO_ORIGINAL', help='Inform the Aruco dictionary to be used')
 parse.add_argument('-calibpath', help='Inform the path for the calibration data')
 parse.add_argument('-msz', help='Inform the size of the marker in millimeters')
+parse.add_argument('-imgar', help='Inform the path to the image to be augmented')
 
 args = parse.parse_args()
 
@@ -45,6 +46,9 @@ try:
                     rVec, tVec = aruco.getAxisVectors(corners, markerSize, cameraCalibrationDataDict)
 
                     aruco.drawAxisOnMarkers(frame, {"rVec": rVec[i], "tVec": tVec[i]}, cameraCalibrationDataDict, True, corner)
+                if args.imgar:
+                    augImage = cv2.imread(args.imgar)
+                    aruco.createImageAugmentation(augImage, frame, corner)
 
         cv2.imshow('Frame', frame)
 
