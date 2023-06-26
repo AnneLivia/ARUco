@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 # ARuco is a library that contains a lot of pre-defined markers that can be used to estimate pose,
 # calibrate camera, construct augmented reality app, and so on. Those fiducial markers, are binary images
 # that contains a specific code that identifies it. An ArUco marker is a synthetic square marker composed by 
@@ -127,3 +128,39 @@ class Aruco:
         # example format: [[ 34.15974605 -16.51720873 332.43917878]]
         x, y, z = axisData["tVec"][0]
         return x, y, z
+    
+    # this method is going to display an image over the aruco marker that is being caputured
+    # through the webcam, if a specific id is encountered
+    def createImageAugmentation(self, augmentedImage, frame, corners):
+
+        imageHeight, imageWidth = augmentedImage.shape[:2]
+        frameHeight, frameWidth = frame.shape[:2]
+
+        # top-left, top-right, bottom-right and bottom-left, for the image to be augmented
+        imagePoints = np.array([[0, 0], [imageWidth, 0], [imageWidth, imageHeight], [0, imageHeight]])
+        # top-left, top-right, bottom-right and bottom-left, of the marker
+        markerPoints = corners
+
+        # find the homography (Perspective Transformation). A Homography is a geometric transformation 
+        # ( a 3×3 matrix ) that maps points from one image to the corresponding points in another image.  
+        # In augmented reality, it is used to align virtual objects in a camera-captured scene, 
+        # making them appear part of the real world. This is achieved by finding keypoint matches 
+        # between the virtual object image and the camera image. Based on these matches, the homography 
+        # is calculated, allowing the virtual object's position and perspective to match the real scene. 
+        # This makes the virtual object appear on the same plane or move with the camera
+        H, _ = cv2.findHomography(srcPoints=imagePoints, dstPoints=markerPoints)
+
+        # next, it's necessary to warp the perspective
+        warpImage = cv2.warpPerspective(augmentedImage, H, (frameWidth, frameHeight))
+        
+        # need to create a mask of the frame (the augmented image is going to be 1's, the rest is 0's)
+        mask = np.zeros((frameHeight, frameWidth), dtype=np.uint8)
+
+        # creating a mask, where the region of the marker is 1. Need to squeeze the points, 
+        # because fillConvexPoly requires the dimensions to be (4, 2), it was (1, 4, 2). 
+        # squeeze removes the additional channel (axes of length one)
+        cv2.fillConvexPoly(mask, np.squeeze(markerPoints).astype(np.int32), 255)
+
+        # inserting the image on the frame
+        cv2.bitwise_and(warpImage, warpImage, frame, mask=mask)
+
