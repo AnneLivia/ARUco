@@ -8,11 +8,21 @@ parse.add_argument('-arudict', default='DICT_ARUCO_ORIGINAL', help='Inform the A
 parse.add_argument('-calibpath', help='Inform the path for the calibration data')
 parse.add_argument('-msz', help='Inform the size of the marker in millimeters')
 parse.add_argument('-imgar', help='Inform the path to the image to be augmented')
+parse.add_argument('-viar', help='Inform the path to the video to be augmented')
 
 args = parse.parse_args()
 
 if args.calibpath and not args.msz:
     parse.error('Inform the size of the marker in millimeters')
+
+# if a video was passed through arguments, it means the user wants to augment a video
+if args.viar:
+    augVideo = cv2.VideoCapture(args.viar)
+
+def initializeVideo(cap):
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+    _, frame = cap.read()
+    return frame
 
 try:
     # creating the aruco detector
@@ -49,6 +59,14 @@ try:
                 if args.imgar:
                     augImage = cv2.imread(args.imgar)
                     aruco.createImageAugmentation(augImage, frame, corner)
+                if args.viar:
+                    ret, augVideoFrame = augVideo.read()
+                    # if the video reached the end, then reinitialize the video
+                    if not ret:
+                        # initialize the video and return first frame
+                        augVideoFrame = initializeVideo(augVideo)
+                    aruco.createVideoAugmentation(augVideoFrame, frame, corner)
+                    
 
         cv2.imshow('Frame', frame)
 

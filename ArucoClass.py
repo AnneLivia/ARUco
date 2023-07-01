@@ -164,3 +164,6 @@ class Aruco:
         # inserting the image on the frame
         cv2.bitwise_and(warpImage, warpImage, frame, mask=mask)
 
+    def createVideoAugmentation(self, augVideo, frame, corner):
+        self.createImageAugmentation(augVideo, frame, corner)
+
