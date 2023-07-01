@@ -16,9 +16,18 @@ This project utilizes OpenCV to create an application that can detect ArUco mark
         - `calibpath`: If you want to visualize the orientation of the markers and calculate the distance, you need to provide the path to the camera calibration data.
         - `msz`: If you provide the camera calibration data path, you also need to specify the marker size in millimeters.
         - `imgar`: Provide a path to the image you wish to augment
+        - `viar`: Provide a path to the video you wish to augment
 
-## Result image
+## Demo
 
-The result image demonstrates the output of the application, showing the detected ArUco markers drawn on the image and the visualization of their orientation using 3D axes.
+The following GIFs demonstrate the output of the application:
 
-<img src="https://github.com/AnneLivia/AROpenCV/assets/31932673/206415cd-96f5-4746-8f07-02cafe31eba4" width="50%"/>
+1. **Visualization of marker orientation using 3D axes:**
+   
+    <img src="https://github.com/AnneLivia/ARUco/assets/31932673/1024f7ad-5257-43d5-8340-8642c1903b58" width="50%"/>
+3. **Image Augmentation**
+   
+    <img src="https://github.com/AnneLivia/ARUco/assets/31932673/0c01cae3-f6c4-472a-bd23-e1533f488eef" width="50%"/>
+5. **Video Augmentation**
+   
+    <img src="https://github.com/AnneLivia/ARUco/assets/31932673/f7fb1d6b-edd6-4875-993e-fe83332f6c5e" width="50%"/>
